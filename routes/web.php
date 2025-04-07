@@ -25,5 +25,6 @@ Route::middleware([RedirectIfAuthenticated::class])->group(function () {
 // Apply the 'auth' middleware to authenticated routes (like profile, logout)
 Route::middleware([CustomAuthenticate::class])->group(function () {
     Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile');
+    Route::put('/account/update-profile', [AccountController::class, 'updateProfile'])->name('account.updateProfile');
     Route::get('/account/logout', [AccountController::class, 'logout'])->name('account.logout');
 });

@@ -100,8 +100,11 @@ class AccountController extends Controller
     //this prevents back login / back page
     public function profile()
     {
+        $id = Auth::user()->id;
+        $user = User::where('id', $id)->first();
+
         return response()
-            ->view('front.account.profile')
+            ->view('front.account.profile', ['user' => $user])
             ->header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('Expires', '0');
@@ -115,5 +118,38 @@ class AccountController extends Controller
     {
         Auth::logout();
         return redirect()->route('account.login');
+    }
+
+
+    //update profile method
+    public function updateProfile(Request $request)
+    {
+        $id = Auth::user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:5|max:20',
+            'email' => 'required|email|unique:users,email,' . $id,
+        ]);
+
+        if ($validator->passes()) {
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->mobile = $request->mobile;
+            $user->designation = $request->designation;
+            $user->save();
+
+            session()->flash('success', 'Profile Updated Successfully');
+
+            return response()->json([
+                'status' => true,
+                'errors' => []
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
     }
 }
