@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
+
 
 
 class AccountController extends Controller
