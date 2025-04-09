@@ -28,9 +28,9 @@
                             <div style="margin-top: -10px;">
                                 <a href="{{ route('account.createJob') }}" class="btn btn-primary">Post a Job</a>
                             </div>
-                            
+
                         </div>
-                        <div class="table-responsive">
+                        <class="table-responsive">
                             <table class="table ">
                                 <thead class="bg-light">
                                     <tr>
@@ -43,8 +43,8 @@
                                 </thead>
                                 <tbody class="border-0">
                                     @if($jobs->isNotEmpty())
-                                      @foreach($jobs as $job)
-                                      <tr class="active">
+                                    @foreach($jobs as $job)
+                                    <tr class="active">
                                         <td>
                                             <div class="job-name fw-500">{{ $job -> title }}</div>
                                             <div class="info1"> {{ $job->jobType->name }} . {{ $job -> location }}</div>
@@ -53,12 +53,12 @@
                                         <td>0 Applications</td>
                                         <td>
 
-                                           @if($job -> status == 1)
-                                           <div class="job-status text-capitalize">Active</div>
-                                           @else
-                                           <div class="job-status text-capitalize">Inactive</div>
-                                           @endif
-                                            
+                                            @if($job -> status == 1)
+                                            <div class="job-status text-capitalize">Active</div>
+                                            @else
+                                            <div class="job-status text-capitalize">Inactive</div>
+                                            @endif
+
                                         </td>
                                         <td>
                                             <div class="action-dots float-end">
@@ -73,18 +73,21 @@
                                             </div>
                                         </td>
                                     </tr>
-                                      @endforeach
+                                    @endforeach
                                     @endif
                                 </tbody>
-                                
+
                             </table>
-                        </div>
                     </div>
-                </div> 
-
-
+                    <div>
+                        {{ $jobs->links() }}
+                    </div>
+                </div>
             </div>
+
+
         </div>
+    </div>
     </div>
 </section>
 
