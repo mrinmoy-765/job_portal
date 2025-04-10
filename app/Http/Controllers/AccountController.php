@@ -359,4 +359,27 @@ class AccountController extends Controller
          }
      }
 
+
+     //delete job method
+     public function deleteJob(Request $request){
+            
+       $job = jobs_post::where([
+            'user_id' => Auth::user()->id,
+            'id' => $request->jobId
+        ])->first();
+
+        if($job == null){
+            session() -> flash('error', 'Job not Found!!!');
+            return response()->json([
+                'status' => true
+            ]);
+        }
+
+        jobs_post::where('id', $request->jobId)->delete();
+        session() -> flash('success', 'Job Post deleted successfully!!!');
+        return response()->json([
+            'status' => true
+        ]);
+    }
+
 }
