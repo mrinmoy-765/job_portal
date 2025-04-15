@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\jobsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CustomAuthenticate;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -13,6 +14,10 @@ use App\Http\Middleware\RedirectIfAuthenticated;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/jobs', [jobsController::class, 'index'])->name('jobs');
+
+
+
 
 // Apply the 'guest' middleware to login and registration routes
 Route::middleware([RedirectIfAuthenticated::class])->group(function () {
