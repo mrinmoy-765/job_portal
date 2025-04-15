@@ -276,7 +276,7 @@ class AccountController extends Controller
     //this method shows jobs created by a user
     public function myJobs(){
 
-        $jobs = jobs_post::where('user_id', Auth::user()->id)->with('jobType')->paginate(10);
+        $jobs = jobs_post::where('user_id', Auth::user()->id)->with('jobType')->orderBy('created_at','DESC')->paginate(10);
           return view('front.account.job.myJobs',[
             'jobs' => $jobs
           ]);
