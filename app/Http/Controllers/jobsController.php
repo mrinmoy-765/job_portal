@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\JobType;
 use App\Models\jobs_post;
+use Illuminate\Support\Facades\Auth;
 
 class jobsController extends Controller
 {
@@ -86,4 +88,67 @@ class jobsController extends Controller
 
        return view('front.jobDetail',['job'=>$job]);
     }
+
+    public function applyJob(Request $request){
+        $id = $request->id;
+
+        $job = jobs_post::where('id',$id)->first();
+
+        session()->flash('error','Job not found');
+
+        if($job == null){
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Job not found'
+            ]);
+        }
+
+
+        //you can not apply on your own job
+        $employer_id = $job->user_id;
+ 
+        if($employer_id == Auth::user()->id){
+            session()->flash('error','You can not apply on your own job');
+            return response()->json([
+                'status' => false,
+                'message' => 'You can not apply on your own job',
+            ]);
+        }
+
+
+        //you can not apply a job twice
+        $jobApplicationCount = JobApplication::where([
+            'user_id' => Auth::user()->id,
+            'job_id' => $id
+        ])->count();
+
+        if($jobApplicationCount > 0){
+            $message = 'You can not apply a job twice';
+            session()->flash('success',$message);
+            return response()->json([
+                'status' => false,
+                'message' => $message,
+            ]);
+        }
+
+
+        $application = new JobApplication();
+        $application->job_id = $id;
+        $application->user_id = Auth::user()->id;
+        $application->employer_id = $employer_id;
+        $application->applied_date = now();
+        $application->save();
+
+    
+
+        $message = 'Application Successfull!!!';
+
+        session()->flash('success',$message);
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+            ]);
+    }
 }
+  

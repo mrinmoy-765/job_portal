@@ -16,6 +16,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/jobs', [jobsController::class, 'index'])->name('jobs');
 Route::get('/jobs/detail/{id}', [jobsController::class, 'detail'])->name('jobDetail');
+Route::post('/apply-job', [jobsController::class, 'applyJob'])->name('applyJob');
+
 
 
 
