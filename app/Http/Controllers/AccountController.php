@@ -226,7 +226,7 @@ class AccountController extends Controller
       
 
        $rules =[
-        'title' => 'required|min:5|max:15',
+        'title' => 'required|min:5|max:30',
         'category' => 'required',
         'jobType'  => 'required',
         'vacancy' => 'required|int',

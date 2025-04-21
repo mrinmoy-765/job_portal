@@ -119,22 +119,22 @@
 
 @section('customJs')
 <script type="text/javascript">
-    function applyJob(id){
+function applyJob(id){
     if(confirm("Apply to this job?")){
         $.ajax({
             url : '{{ route("applyJob") }}',
             type: 'POST',
             data: {
                 id: id,
-                _token: '{{ csrf_token() }}' // always include this
+                _token: '{{ csrf_token() }}' // Don't forget CSRF token
             },
             dataType: 'json',
             success: function(response){
                 if(response.status == true || response.status == false){
-                    // slight delay to ensure session flash is written
+                    // Small delay to make sure session is stored before reload
                     setTimeout(function() {
-                        window.location.href = "{{ url()->current() }}";
-                    }, 200);
+                        window.location.reload();
+                    }, 600);
                 }
             }
         });

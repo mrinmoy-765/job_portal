@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
          //Category::factory(5)->create();
 
          // Creating 5 dummy job types
-        // JobType::factory(5)->create();
+         //JobType::factory(5)->create();
       
 
          //creating 50 dummy job posts

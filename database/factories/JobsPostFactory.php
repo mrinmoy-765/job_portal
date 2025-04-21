@@ -13,7 +13,7 @@ class JobsPostFactory extends Factory
     {
         return [
             'title' => $this->faker->jobTitle,
-            'user_id' => 12,
+            'user_id' => rand(1,2),
             'job_type_id' => rand(1,5),
             'category_id' => rand(1,5),
             'vacancy' => rand(1,5),
