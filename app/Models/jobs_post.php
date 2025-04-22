@@ -23,4 +23,8 @@ class jobs_post extends Model
     public function Category(){
         return $this->belongsTo(Category::class);
     }
+
+    public function applications(){
+        return $this->hasMany(JobApplication::class, 'job_id');
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\JobType;
 use App\Models\jobs_post;
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -382,4 +383,39 @@ class AccountController extends Controller
         ]);
     }
 
+    //this method will show my applied job page
+    public function myJobApplications(){
+        $jobApplications = JobApplication::where('user_id',Auth::user()->id)
+        ->with('jobs_post','jobs_post.jobType','jobs_post.applications')
+        ->paginate(10);
+      //  dd($jobApplications);  
+        return view('front.account.job.my-job-applications',[
+            'jobApplications' =>  $jobApplications
+          ]);
+    }
+
+
+
+    //this method will remove job application
+    public function removeJobApplication(Request $request){
+               $jobApplication = JobApplication::where([
+                     'id'  => $request->id,
+                      'user_id' => Auth::user()->id]
+                )->first();
+
+
+            if($jobApplication == null){
+                session() ->flash('error','Job application not found');
+                return response()->json([
+                    'status' => false,
+                ]);
+            }
+
+            JobApplication::find($request->id)->delete();
+
+            session() ->flash('success','Application removed');
+            return response()->json([
+                'status' => true,
+            ]);
+    }
 }

@@ -82,7 +82,7 @@
                 <div class="card shadow border-0">
                     <div class="job_sumary">
                         <div class="summery_header pb-1 pt-4">
-                            <h3>Job Summery</h3>
+                            <h3>Job Summary</h3>
                         </div>
                         <div class="job_content pt-3">
                             <ul>
