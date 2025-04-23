@@ -32,10 +32,11 @@ class jobsController extends Controller
             });
         }
 
-        //search using location
+        // Search using location
         if (!empty($request->location)) {
-            $jobs = $jobs->where('location', $request->location);
+            $jobs = $jobs->where('location', 'LIKE', '%' . $request->location . '%');
         }
+
 
         //search using category
         if (!empty($request->category)) {
@@ -59,12 +60,12 @@ class jobsController extends Controller
 
         $jobs = $jobs->with('jobType');
 
-        if($request->sort == 0){
+        if ($request->sort == 0) {
             $jobs = $jobs->orderBy('created_at', 'ASC');
-        } else{
+        } else {
             $jobs = $jobs->orderBy('created_at', 'DESC');
         }
-       
+
 
         $jobs = $jobs->paginate(9);
 
@@ -77,30 +78,32 @@ class jobsController extends Controller
     }
 
     //this method will show job detail page
-    public function detail($id){
+    public function detail($id)
+    {
 
         $job = jobs_post::where([
             'id' => $id,
             'status' => 1
-        ])->with(['jobType','category'])->first();
+        ])->with(['jobType', 'category'])->first();
 
-     
-        if($job == null){
+
+        if ($job == null) {
             abort(404);
         }
 
-       return view('front.jobDetail',['job'=>$job]);
+        return view('front.jobDetail', ['job' => $job]);
     }
 
-    public function applyJob(Request $request){
+    public function applyJob(Request $request)
+    {
         $id = $request->id;
 
-        $job = jobs_post::where('id',$id)->first();
+        $job = jobs_post::where('id', $id)->first();
 
-        session()->flash('error','Job not found');
+        session()->flash('error', 'Job not found');
 
-        if($job == null){
-            
+        if ($job == null) {
+
             return response()->json([
                 'status' => false,
                 'message' => 'Job not found'
@@ -110,9 +113,9 @@ class jobsController extends Controller
 
         //you can not apply on your own job
         $employer_id = $job->user_id;
- 
-        if($employer_id == Auth::user()->id){
-            session()->flash('error','You can not apply on your own job');
+
+        if ($employer_id == Auth::user()->id) {
+            session()->flash('error', 'You can not apply on your own job');
             return response()->json([
                 'status' => false,
                 'message' => 'You can not apply on your own job',
@@ -126,9 +129,9 @@ class jobsController extends Controller
             'job_id' => $id
         ])->count();
 
-        if($jobApplicationCount > 0){
+        if ($jobApplicationCount > 0) {
             $message = 'You can not apply a job twice';
-            session()->flash('success',$message);
+            session()->flash('success', $message);
             return response()->json([
                 'status' => false,
                 'message' => $message,
@@ -145,24 +148,23 @@ class jobsController extends Controller
 
 
         //send notification email to employer
-        $employer = User::where('id',$employer_id)->first();
+        $employer = User::where('id', $employer_id)->first();
 
         $mailData = [
-             'employer' => $employer,
-             'user' => Auth::user(),
-             'job' => $job,
+            'employer' => $employer,
+            'user' => Auth::user(),
+            'job' => $job,
         ];
 
         Mail::to($employer->emailf)->send(new jobNotificationEmail($mailData));
-    
+
 
         $message = 'Application Successfull!!!';
 
-        session()->flash('success',$message);
-            return response()->json([
-                'status' => true,
-                'message' => $message,
-            ]);
+        session()->flash('success', $message);
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+        ]);
     }
 }
-  
