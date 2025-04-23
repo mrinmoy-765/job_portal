@@ -37,8 +37,9 @@
                                 </div>
                             </div>
                             <div class="jobs_right">
-                                <div class="apply_now">
-                                    <a class="heart_mark" href="#"> <i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                                <div class="apply_now {{ ($count == 1) ? 'saved-job' : '' }}">
+                                    <a class="heart_mark"  href="javascript:void(0);" onclick="saveJob({{ $job->id }})"
+                                    > <i class="fa fa-heart-o" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +69,14 @@
                         @endif
                         <div class="border-bottom"></div>
                         <div class="pt-3 text-end">
-                            <a href="#" class="btn btn-secondary">Save</a>
+                           
+                           @if (Auth::check())
+                           <a href="#" onclick="saveJob('{{ $job->id }}')" class="btn btn-secondary">Save</a>
+                           @else
+                            <a href="javascript:void(0);" class="btn btn-secondary disabled">Log in to save</a>
+                           @endif
+
+                             
                            @if (Auth::check())
                            <a href="#" onclick="applyJob('{{ $job->id }}')" class="btn btn-primary">Apply</a>
                            @else
@@ -119,6 +127,7 @@
 
 @section('customJs')
 <script type="text/javascript">
+
 function applyJob(id){
     if(confirm("Apply to this job?")){
         $.ajax({
@@ -126,20 +135,37 @@ function applyJob(id){
             type: 'POST',
             data: {
                 id: id,
-                _token: '{{ csrf_token() }}' // Don't forget CSRF token
+                _token: '{{ csrf_token() }}'
             },
             dataType: 'json',
             success: function(response){
-                if(response.status == true || response.status == false){
-                    // Small delay to make sure session is stored before reload
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 600);
+                if(response.status){
+                    setTimeout(() => window.location.reload(), 600);
                 }
             }
         });
     }
 }
+
+function saveJob(id){
+    if(confirm("Save this job?")){
+        $.ajax({
+            url : '{{ route("saveJobPost") }}',
+            type: 'POST',
+            data: {
+                id: id,
+                _token: '{{ csrf_token() }}'
+            },
+            dataType: 'json',
+            success: function(response){
+                if(response.status){
+                    setTimeout(() => window.location.reload(), 600);
+                }
+            }
+        });
+    }
+}
+
 
 </script>
 @endsection
