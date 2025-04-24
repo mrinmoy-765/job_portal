@@ -92,12 +92,22 @@ class jobsController extends Controller
             abort(404);
         }
 
+        $count = 0;
+
+       if(Auth::user()){
         $count =  SavedJob::where([
             'user_id' => Auth::user()->id,
             'job_id' => $id
         ])->count();
+       }
 
-        return view('front.jobDetail', ['job' => $job, 'count' => $count]);
+
+       //fetch applicants
+       $applicants = JobApplication::where('job_id',$id)->with('user')->get();
+
+        return view('front.jobDetail', ['job' => $job, 
+                                                    'count' => $count, 
+                                                    'applicants' => $applicants]);
     }
 
     public function applyJob(Request $request)

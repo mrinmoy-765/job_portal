@@ -38,8 +38,7 @@
                             </div>
                             <div class="jobs_right">
                                 <div class="apply_now {{ ($count == 1) ? 'saved-job' : '' }}">
-                                    <a class="heart_mark"  href="javascript:void(0);" onclick="saveJob({{ $job->id }})"
-                                    > <i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                                    <a class="heart_mark" href="javascript:void(0);" onclick="saveJob({{ $job->id }})"> <i class="fa fa-heart-o" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -47,13 +46,13 @@
                     <div class="descript_wrap white-bg">
                         <div class="single_wrap">
                             <h4>Job description</h4>
-                           {!! nl2br($job->description) !!}
+                            {!! nl2br($job->description) !!}
                         </div>
                         @if (!empty($job->responsibility))
                         <div class="single_wrap">
                             <h4>Responsibility</h4>
                             {!! nl2br($job->responsibility) !!}
-                        </div>  
+                        </div>
                         @endif
                         @if (!empty($job->qualifications))
                         <div class="single_wrap">
@@ -69,23 +68,69 @@
                         @endif
                         <div class="border-bottom"></div>
                         <div class="pt-3 text-end">
-                           
-                           @if (Auth::check())
-                           <a href="#" onclick="saveJob('{{ $job->id }}')" class="btn btn-secondary">Save</a>
-                           @else
-                            <a href="javascript:void(0);" class="btn btn-secondary disabled">Log in to save</a>
-                           @endif
 
-                             
-                           @if (Auth::check())
-                           <a href="#" onclick="applyJob('{{ $job->id }}')" class="btn btn-primary">Apply</a>
-                           @else
+                            @if (Auth::check())
+                            <a href="#" onclick="saveJob('{{ $job->id }}')" class="btn btn-secondary">Save</a>
+                            @else
+                            <a href="javascript:void(0);" class="btn btn-secondary disabled">Log in to save</a>
+                            @endif
+
+
+                            @if (Auth::check())
+                            <a href="#" onclick="applyJob('{{ $job->id }}')" class="btn btn-primary">Apply</a>
+                            @else
                             <a href="javascript:void(0);" class="btn btn-primary disabled">Log in to Apply</a>
-                           @endif
+                            @endif
                         </div>
                     </div>
                 </div>
+                <!-- show applicants -->
+                @if(Auth::user())
+                @if(Auth::user()->id == $job->user_id)
+                <div class="card shadow border-0 mt-4">
+                    <div class="job_details_header">
+                        <div class="single_jobs white-bg d-flex justify-content-between">
+                            <div class="jobs_left d-flex align-items-center">
+
+                                <div class="jobs_conetent">
+                                    <h4>Applicants</h4>
+                                </div>
+                            </div>
+                            <div class="jobs_right">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="descript_wrap white-bg">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Applied Date</th>
+                            </tr>
+                            @if($applicants -> isNotEmpty())
+                            @foreach ($applicants as $applicant)
+                            <tr>
+                                <td>{{ $applicant->user->name }}</td>
+                                <td>{{ $applicant->user->email }}</td>
+                                <td>{{ $applicant->user->mobile }}</td>
+                                <td>{{ \Carbon\Carbon::parse($applicant->applied_date)->format('d M,Y') }}</td>
+                            </tr>
+                            @endforeach
+                            @else
+                              <tr>
+                                <td colspan="3" class="text-center">Applicants not found</td>
+                              </tr>
+                            @endif
+                        </table>
+                    </div>
+                </div>
+                @endif
+                @endif
+
             </div>
+
             <div class="col-md-4">
                 <div class="card shadow border-0">
                     <div class="job_sumary">
@@ -127,45 +172,42 @@
 
 @section('customJs')
 <script type="text/javascript">
-
-function applyJob(id){
-    if(confirm("Apply to this job?")){
-        $.ajax({
-            url : '{{ route("applyJob") }}',
-            type: 'POST',
-            data: {
-                id: id,
-                _token: '{{ csrf_token() }}'
-            },
-            dataType: 'json',
-            success: function(response){
-                if(response.status){
-                    setTimeout(() => window.location.reload(), 600);
+    function applyJob(id) {
+        if (confirm("Apply to this job?")) {
+            $.ajax({
+                url: '{{ route("applyJob") }}',
+                type: 'POST',
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status) {
+                        setTimeout(() => window.location.reload(), 600);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
-}
 
-function saveJob(id){
-    if(confirm("Save this job?")){
-        $.ajax({
-            url : '{{ route("saveJobPost") }}',
-            type: 'POST',
-            data: {
-                id: id,
-                _token: '{{ csrf_token() }}'
-            },
-            dataType: 'json',
-            success: function(response){
-                if(response.status){
-                    setTimeout(() => window.location.reload(), 600);
+    function saveJob(id) {
+        if (confirm("Save this job?")) {
+            $.ajax({
+                url: '{{ route("saveJobPost") }}',
+                type: 'POST',
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status) {
+                        setTimeout(() => window.location.reload(), 600);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
-}
-
-
 </script>
 @endsection
