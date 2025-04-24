@@ -217,4 +217,43 @@ class jobsController extends Controller
         ]);
 
     }
+
+    public function savedJobs(){
+
+        $savedJobs = SavedJob::where([
+            'user_id' => Auth::user()->id
+        ])
+        ->with(['jobs_post','jobs_post.jobType','jobs_post.applications'])
+        ->orderBy('created_at','DESC')
+        ->paginate(10);
+
+        return view('front.account.job.saved-jobs',[
+                  'savedJobs' => $savedJobs
+        ]);
+    }
+
+
+
+    //this method will remove saved jobs
+    public function removeSavedJob(Request $request){
+        $savedJob = SavedJob::where([
+              'id'  => $request->id,
+               'user_id' => Auth::user()->id]
+         )->first();
+
+
+     if($savedJob == null){
+         session() ->flash('error','Job  not found');
+         return response()->json([
+             'status' => false,
+         ]);
+     }
+
+     SavedJob::find($request->id)->delete();
+
+     session() ->flash('success','Job removed');
+     return response()->json([
+         'status' => true,
+     ]);
+}
 }

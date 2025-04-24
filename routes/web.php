@@ -18,10 +18,7 @@ Route::get('/jobs', [jobsController::class, 'index'])->name('jobs');
 Route::get('/jobs/detail/{id}', [jobsController::class, 'detail'])->name('jobDetail');
 Route::post('/apply-job', [jobsController::class, 'applyJob'])->name('applyJob');
 Route::post('/save-job-post', [jobsController::class, 'saveJob'])->name('saveJobPost');
-
-
-
-
+Route::get('/saved-jobs', [jobsController::class, 'savedJobs'])->name('account.savedJobs');
 
 
 // Apply the 'guest' middleware to login and registration routes
@@ -46,4 +43,5 @@ Route::middleware([CustomAuthenticate::class])->group(function () {
     Route::post('/delete-job', [AccountController::class, 'deleteJob'])->name('account.deleteJob');
     Route::get('/my-job-applications', [AccountController::class, 'myJobApplications'])->name('account.myJobApplications');
     Route::post('/remove-job-application', [AccountController::class, 'removeJobApplication'])->name('account.removeJobApplication');
+    Route::post('/removed-job', [JobsController::class, 'removeSavedJob'])->name('account.removeSaveJob');
 });
