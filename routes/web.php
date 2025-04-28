@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\admindashboardController;
+use App\Http\Controllers\adminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\jobsController;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +26,11 @@ Route::get('/saved-jobs', [jobsController::class, 'savedJobs'])->name('account.s
 
 //Apply role middleware
 Route::group(['prefix' => 'admin','middleware'=>'checkRole'],function(){
-      Route::get('/dashboard',[admindashboardController::class,'index'])->name('admin.dashboard');
+      Route::get('/dashboard',[adminController::class,'index'])->name('admin.dashboard');
+      Route::get('/users',[adminController::class,'getUsers'])->name('admin.getUserList');
+      Route::get('/admin/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.editUser');
+      Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+
 }); 
 
 
