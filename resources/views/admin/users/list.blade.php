@@ -108,23 +108,26 @@ function deleteUser(id) {
     }
 
     $.ajax({
-        url: '/admin/users/' + id,  
-        type: 'DELETE',
-        data: {
-            _token: '{{ csrf_token() }}'
-        },
-        success: function(response) {
-            if (response.status) {
-                alert(response.message);
-                location.reload();
-            } else {
-                alert(response.message);
-            }
-        },
-        error: function(xhr) {
-            alert('Something went wrong!');
+    url: '{{ route("admin.deleteUser") }}',
+    type: 'DELETE',
+    data: {
+         id: id,
+        _token: '{{ csrf_token() }}'
+    },
+    dataType: 'json',
+    success: function(response) {
+        if (response.status) {
+            alert(response.message);
+            location.reload();
+        } else {
+            alert(response.message);
         }
-    });
+    },
+    error: function(xhr) {
+        alert('Something went wrong!');
+    }
+});
+
 }
 
 </script>

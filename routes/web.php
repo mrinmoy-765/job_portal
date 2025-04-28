@@ -30,7 +30,7 @@ Route::group(['prefix' => 'admin','middleware'=>'checkRole'],function(){
       Route::get('/users',[adminController::class,'getUsers'])->name('admin.getUserList');
       Route::get('/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.editUser');
       Route::put('/users/{id}/edit', [AdminController::class, 'update'])->name('admin.editUser');
-      Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+      Route::delete('/users/delete', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 }); 
 
 

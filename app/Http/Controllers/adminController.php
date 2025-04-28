@@ -63,8 +63,12 @@ class adminController extends Controller
         }
     }
 
-    public function deleteUser($id)
+    public function deleteUser(Request $request)
     {
+
+      
+        $id = $request->id;
+
         $user = User::find($id);
 
         if (!$user) {
