@@ -28,9 +28,9 @@ Route::get('/saved-jobs', [jobsController::class, 'savedJobs'])->name('account.s
 Route::group(['prefix' => 'admin','middleware'=>'checkRole'],function(){
       Route::get('/dashboard',[adminController::class,'index'])->name('admin.dashboard');
       Route::get('/users',[adminController::class,'getUsers'])->name('admin.getUserList');
-      Route::get('/admin/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.editUser');
+      Route::get('/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.editUser');
+      Route::put('/users/{id}/edit', [AdminController::class, 'update'])->name('admin.editUser');
       Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
-
 }); 
 
 

@@ -102,20 +102,30 @@
 
 @section('customJs')
 <script>
-    function deleteUser(userId) {
-        if (confirm('Are you sure you want to delete this user?')) {
-            $.ajax({
-                url: '{{ url("/admin/users") }}/' + userId,
-                type: 'POST',
-                data: {
-                    _method: 'DELETE',
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    location.reload();
-                }
-            });
-        }
+function deleteUser(id) {
+    if (!confirm('Are you sure you want to delete this user?')) {
+        return;
     }
+
+    $.ajax({
+        url: '/admin/users/' + id,  
+        type: 'DELETE',
+        data: {
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(response) {
+            if (response.status) {
+                alert(response.message);
+                location.reload();
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function(xhr) {
+            alert('Something went wrong!');
+        }
+    });
+}
+
 </script>
 @endsection
