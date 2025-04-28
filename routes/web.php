@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\admindashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\jobsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CustomAuthenticate;
 use App\Http\Middleware\RedirectIfAuthenticated;
+
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -19,6 +21,14 @@ Route::get('/jobs/detail/{id}', [jobsController::class, 'detail'])->name('jobDet
 Route::post('/apply-job', [jobsController::class, 'applyJob'])->name('applyJob');
 Route::post('/save-job-post', [jobsController::class, 'saveJob'])->name('saveJobPost');
 Route::get('/saved-jobs', [jobsController::class, 'savedJobs'])->name('account.savedJobs');
+
+
+
+//Apply role middleware
+Route::group(['prefix' => 'admin','middleware'=>'checkRole'],function(){
+      Route::get('/dashboard',[admindashboardController::class,'index'])->name('admin.dashboard');
+}); 
+
 
 
 // Apply the 'guest' middleware to login and registration routes
